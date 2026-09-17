@@ -5,6 +5,7 @@ import fs from "fs";
 import path from "path";
 import {clerkMiddleware} from "@clerk/express";
 import { connectDB } from "./lib/db.js";
+import job from "./lib/cron.js";
 
 const app = express();
 const FRONTEND_URL = process.env.FRONTEND_URL;
@@ -18,6 +19,10 @@ app.use(cors({ origin: FRONTEND_URL, credentials:true }));
 
 app.use(clerkMiddleware());
 
+app.get("/health", (req, res) => {
+  res.status(200).json({ ok: true });
+});
+
 if (fs.existsSync(publicDir)) {
   app.use(express.static(publicDir));
 
@@ -29,4 +34,5 @@ if (fs.existsSync(publicDir)) {
 app.listen(process.env.PORT, () => {
     connectDB();
     console.log(`Server running on port ${process.env.PORT}!!!`);
+    if (process.env.NODE_ENV === "production") job.start();
 });
