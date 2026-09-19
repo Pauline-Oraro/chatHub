@@ -1,6 +1,7 @@
 import User from "../models/user.model.js";
 import Message from "../models/message.model.js";
 import { hasImageKitConfig, uploadChatMedia } from "../lib/imagekit.js";
+import { getReceiverSocketId, io } from "../lib/socket.js";
 
 // get users for sidebar
 export async function getUsersForSidebar(req, res){
@@ -107,6 +108,13 @@ export async function sendMessage(req, res) {
     });
 
     await newMessage.save();
+
+    const receiverSocketId = getReceiverSocketId(receiverId);
+    // send the message in realtime if user is online
+    if (receiverSocketId) {
+        io.to(receiverSocketId).emit("newMessage", newMessage);
+    }
+
     res.status(201).json(newMessage);
 
 }
