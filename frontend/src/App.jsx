@@ -6,13 +6,16 @@ import { WallpaperProvider } from './context/WallpaperContext'
 import { Navigate, Route, Routes } from 'react-router'
 import ChatPage from './pages/ChatPage'
 import AuthPage from './pages/AuthPage'
+import PageLoader from "./components/PageLoader";
 
 function App() {
 
   // check if you are authenticated user and if clerk is loaded
   const {isSignedIn, isLoaded} = useAuth()
 
-  if (!isLoaded) return <p>loading...</p>
+  if (!isLoaded) return <p>
+    <PageLoader />
+  </p>
 
 
   return (
