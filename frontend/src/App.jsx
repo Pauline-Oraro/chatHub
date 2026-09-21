@@ -9,6 +9,7 @@ import AuthPage from './pages/AuthPage'
 import PageLoader from "./components/PageLoader";
 import { useAuthStore } from './store/useAuthStore'
 import { useEffect } from 'react'
+import { Toaster } from "react-hot-toast";
 
 function App() {
 
@@ -35,6 +36,7 @@ function App() {
           <Route path="/" element={isSignedIn ? <ChatPage /> : <Navigate to={"/auth"} replace />} />
           <Route path="/auth" element={!isSignedIn ? <AuthPage /> : <Navigate to={"/"} replace />} />
         </Routes>
+        <Toaster />
     </WallpaperProvider>
     </ThemeProvider>
   )
